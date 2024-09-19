@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_LINE_LENGTH 256
+
+int main() {
+    FILE *file;
+    char line[MAX_LINE_LENGTH];
+    char filename[] = "arquivo.txt";
+
+    file = fopen(filename, "w");
+    if (file == NULL) {
+        perror("Erro ao abrir o arquivo para escrita");
+        return EXIT_FAILURE;
+    }
+
+    printf("Digite linhas de texto (digite 'sair' para encerrar):\n");
+    while (1) {
+        printf(">> ");
+        fgets(line, sizeof(line), stdin);
+
+        line[strcspn(line, "\n")] = 0;
+
+        if (strcmp(line, "sair") == 0) {
+            break;
+        }
+
+        fprintf(file, "%s\n", line);
+    }
+
+    fclose(file);
+
+    file = fopen(filename, "r");
+    if (file == NULL) {
+        perror("Erro ao abrir o arquivo para leitura");
+        return EXIT_FAILURE;
+    }
+
+    printf("\nConteúdo do arquivo:\n");
+    while (fgets(line, sizeof(line), file) != NULL) {
+        printf("%s", line);
+    }
+
+    fclose(file);
+
+    return EXIT_SUCCESS;
+}
